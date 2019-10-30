@@ -1,0 +1,237 @@
+﻿
+#####################################################
+# Jieba三種斷詞法
+
+# Jieba1
+#encoding=utf-8
+import jieba
+
+seg_list = jieba.cut("我來到台中教育大學",cut_all=True)
+print ("Full Mode:", "/ ".join(seg_list)) #全模式
+
+seg_list = jieba.cut("我來到台中教育大學",cut_all=False)
+print ("Default Mode:", "/ ".join(seg_list)) #精確模式
+
+seg_list = jieba.cut("我來到台中教育大學") #默認是精確模式
+print (", ".join(seg_list))
+
+seg_list = jieba.cut_for_search("志明碩士畢業於台中教育大學，後在日本東京大學深造") #搜索引擎模式
+print (", ".join(seg_list))
+
+
+sentence = "我來到台中教育大學就讀碩士"
+# 預設模式斷詞
+breakword = jieba.cut(sentence, cut_all=False)
+print("預設模式:" + '|' . join(breakword))
+
+# 全文模式斷詞
+breakword = jieba.cut(sentence, cut_all=True)
+print("全文模式:" + '|' . join(breakword))
+
+# 搜尋引擎模式斷詞
+breakword = jieba.cut_for_search(sentence)
+print("搜尋引擎:" + '|' . join(breakword))
+
+#-------------------------------------------------
+Output:
+預設模式:我來|到|台|中|教育|大學
+全文模式:我|來|到|台中|教育|大|學
+搜尋引擎:我來|到|台|中|教育|大學
+
+#####################################################
+
+# Jieba2  設定繁體中文詞庫
+#encoding=utf-8
+import jieba
+
+# 設定繁體中文詞庫
+jieba.set_dictionary('dictionary/dict.txt.big.txt')  
+
+sentence = "我來到台中教育大學就讀碩士"
+# 預設模式斷詞
+breakword = jieba.cut(sentence, cut_all=False)
+print("預設模式:" + '|' . join(breakword))
+
+# 全文模式斷詞
+breakword = jieba.cut(sentence, cut_all=True)
+print("全文模式:" + '|' . join(breakword))
+
+# 搜尋引擎模式斷詞
+breakword = jieba.cut_for_search(sentence)
+print("搜尋引擎:" + '|' . join(breakword))
+
+#-------------------------------------------------
+Output:
+預設模式:我|來到|台|中|教育|大學
+全文模式:我|來到|台中|教育|大學
+搜尋引擎:我|來到|台|中|教育|大學
+#-------------------------------------------------
+修改後
+Output:
+預設模式:我|來到|台中教育大學
+全文模式:我|來到|台中|台中教育大學|教育|大學
+搜尋引擎:我|來到|台中|教育|大學|台中教育大學
+
+#####################################################
+
+# Jieba3 增加自定義的詞
+#encoding=utf-8
+import jieba
+
+# 設定繁體中文詞庫
+jieba.set_dictionary('dictionary/dict.txt.big.txt')  
+
+sentence = "吳智鴻來到台中教育大學數位系就讀碩士"
+
+#jieba.add_word('數位系')
+#jieba.add_word('凱特琳')
+#jieba.del_word('自定义词')
+
+# 預設模式斷詞
+breakword = jieba.cut(sentence, cut_all=False)
+print("預設模式:" + '|' . join(breakword))
+
+# 全文模式斷詞
+breakword = jieba.cut(sentence, cut_all=True)
+print("全文模式:" + '|' . join(breakword))
+
+# 搜尋引擎模式斷詞
+breakword = jieba.cut_for_search(sentence)
+print("搜尋引擎:" + '|' . join(breakword))
+
+#-------------------------------------------------
+Output:
+預設模式:吳智鴻|來到|台中教育大學|數位|系|就讀|碩士
+全文模式:吳|智|鴻|來到|台中|台中教育大學|教育|大學|數位|系|就讀|碩士
+搜尋引擎:吳智鴻|來到|台中|教育|大學|台中教育大學|數位|系|就讀|碩士
+#-------------------------------------------------
+#-------------------------------------------------
+修改後
+Output:
+預設模式:吳智鴻|來到|台中教育大學|數位系|就讀|碩士
+全文模式:吳|智|鴻|來到|台中|台中教育大學|教育|大學|數位|數位系|就讀|碩士
+搜尋引擎:吳智鴻|來到|台中|教育|大學|台中教育大學|數位|數位系|就讀|碩士
+
+
+#####################################################
+#encoding=utf-8
+import jieba
+
+# 設定繁體中文詞庫
+jieba.set_dictionary('dictionary/dict.txt.big.txt')  
+
+# 增加自定義停用詞
+jieba.load_userdict('dictionary/user_dict.txt')
+
+
+sentence = "吳智鴻，來到國立臺中教育大學數位系就讀碩士。"
+
+jieba.add_word('數位系')
+#jieba.add_word('凱特琳')
+#jieba.del_word('自定义词')
+
+# 預設模式斷詞
+breakword = jieba.cut(sentence, cut_all=False)
+print("預設模式:" + '|' . join(breakword))
+
+# 全文模式斷詞
+breakword = jieba.cut(sentence, cut_all=True)
+print("全文模式:" + '|' . join(breakword))
+
+# 搜尋引擎模式斷詞
+breakword = jieba.cut_for_search(sentence)
+print("搜尋引擎:" + '|' . join(breakword))
+#-------------------------------------------------
+Output:
+預設模式:吳智鴻|，|來到|國立臺中教育大學|數位系|就讀|碩士|。
+全文模式:吳智鴻|||來到|國立|國立臺中教育大學|臺中|教育|大學|數位|數位系|就讀|碩士||
+搜尋引擎:吳智鴻|，|來到|國立|臺中|教育|大學|國立臺中教育大學|數位|數位系|就讀|碩士|。
+#####################################################
+
+# Jieba5 增加停用字
+#encoding=utf-8
+import jieba
+
+# 設定繁體中文詞庫
+jieba.set_dictionary('dictionary/dict.txt.big.txt')  
+
+# 增加自定義停用詞
+jieba.load_userdict('dictionary/user_dict.txt')
+
+# 打開停用字詞典
+with open('dictionary/stopword.txt', 'r', encoding='utf-8-sig') as file:
+    stops = file.read().split('\n')  # 將停用詞儲存在stops串列中
+print("停用詞:"+'|' . join(stops))
+    
+sentence = "吳智鴻，來到國立臺中教育大學數位系就讀碩士。"
+
+#jieba.add_word('數位系')
+#jieba.add_word('凱特琳')
+#jieba.del_word('自定义词')
+
+# 預設模式斷詞
+breakword = jieba.cut(sentence, cut_all=False)
+final_words = []   #儲存最後的詞
+#拆解句子為字詞
+for word in breakword:     # 拆解句子為字詞
+    if word not in stops:  #不是停用詞
+        final_words.append(word)
+print("去除停用:" + '|' . join(final_words))
+
+breakword = jieba.cut(sentence, cut_all=False)
+print("預設模式:" + '|' . join(breakword))    
+
+# 全文模式斷詞
+breakword = jieba.cut(sentence, cut_all=True)
+print("全文模式:" + '|' . join(breakword))
+
+# 搜尋引擎模式斷詞
+breakword = jieba.cut_for_search(sentence)
+print("搜尋引擎:" + '|' . join(breakword))
+#-------------------------------------------------
+Output:
+停用詞:"|;|,|，|。|來到
+去除停用:吳智鴻|國立臺中教育大學|數位系|就讀|碩士
+預設模式:吳智鴻|，|來到|國立臺中教育大學|數位系|就讀|碩士|。
+全文模式:吳智鴻|||來到|國立|國立臺中教育大學|臺中|教育|大學|數位|數位系|就讀|碩士||
+搜尋引擎:吳智鴻|，|來到|國立|臺中|教育|大學|國立臺中教育大學|數位|數位系|就讀|碩士|。
+
+#####################################################
+# WordCloud  文字雲
+
+from PIL import Image
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+import jieba
+import numpy as np
+from collections import Counter
+
+text = open('news1.txt', "r",encoding="utf-8").read()  #讀文字資料
+ 
+jieba.set_dictionary('dictionary/dict.txt.big.txt')
+with open('dictionary/stopWord_cloud.txt', 'r', encoding='utf-8-sig') as f:  #設定停用詞
+#with open('dictionary/stopWord_cloudmod.txt', 'r', encoding='utf-8-sig') as f:  #設定停用詞
+    stops = f.read().split('\n')   
+terms = []  #儲存字詞
+for t in jieba.cut(text, cut_all=False):  #拆解句子為字詞
+    if t not in stops:  #不是停用詞
+        terms.append(t)
+diction = Counter(terms)
+# 可列印詞的統計數量
+print(diction)
+
+font = "C:\\Windows\\Fonts\\simsun.ttc"  #設定字型(宋體)
+#wordcloud = WordCloud(font_path="C:\\Windows\\Fonts\\simsun.ttc")
+
+mask = np.array(Image.open("heart.png"))  #設定文字雲形狀 
+#wordcloud = WordCloud(font_path=font) 
+wordcloud = WordCloud(background_color="white",mask=mask, font_path=font)  #背景顏色預設黑色,改為白色,字體為宋體
+wordcloud.generate_from_frequencies(diction)  #產生文字雲
+
+#產生圖片
+plt.figure(figsize=(6,6))
+plt.imshow(wordcloud)
+plt.axis("off")
+plt.show()
+
+wordcloud.to_file("news_Wordcloud.png")  #存檔
